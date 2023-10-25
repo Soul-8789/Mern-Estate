@@ -1,5 +1,5 @@
 import User from "../models/user.model.js";
-import { errorHandler } from "../utils/error";
+import { errorHandler } from "../utils/error.js";
 import bcryptjs from 'bcryptjs';
 
 export const test = (req, res) => {
@@ -13,7 +13,7 @@ export const updateUser = async (req, res, next) => {
 
 	try {
 		if (req.body.password) {
-			req.body.password = bcryptjs.hashSync(req.body.password, 10)
+			req.body.password = await bcryptjs.hashSync(req.body.password, 10)
 		}
 
 		const updatedUser = await User.findByIdAndUpdate(req.params.id, {
@@ -25,8 +25,9 @@ export const updateUser = async (req, res, next) => {
 
 			}
 		}, { new: true })
+		
 
-		const { password, ...rest } = updateUser._doc;
+		const { password, ...rest } = updatedUser._doc;
 
 		res.status(200).json(rest);
 
