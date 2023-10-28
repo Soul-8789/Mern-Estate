@@ -37,7 +37,7 @@ export default function CreateListing() {
 
 	console.log(formData);
 
-	const handleImageSubmit = async (e) => {
+	const handleImageSubmit = async () => {
 		if (files.length > 0 && files.length + formData.imageUrls.length < 7) {
 			setUploading(true);
 			const promises = [];
