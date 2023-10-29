@@ -134,7 +134,7 @@ export default function Profile() {
 		}
 	};
 
-	const handleShowListings = async (e) => {
+	const handleShowListings = async () => {
 		try {
 			setShowListingsError(false);
 
@@ -294,7 +294,10 @@ export default function Profile() {
 									className='text-red-700 uppercase'>
 									Delete
 								</button>
-								<button className='text-green-700 uppercase'>Edit</button>
+
+								<Link to={`/update-listing/${listing._id}`}>
+									<button className='text-green-700 uppercase'>Update</button>
+								</Link>
 							</div>
 						</div>
 					))}
