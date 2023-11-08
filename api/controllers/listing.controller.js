@@ -66,3 +66,50 @@ export const getListing = async (req, res, next) => {
 		next(error);
 	}
 };
+
+
+export const getListings = async (req, res, next) => {
+	try{
+		const limit = parseInt(req.query.limit) || 9;      // if any limit exist then that limit else show 9 tabs
+		const startIndex = parseInt(req.query.startIndex) || 0;
+
+		let offer = req.query.offer;                    // checking if furnished if selected or not
+		if (offer === undefined || offer === 'false') {
+			offer = { $in: [false, true] };
+		}
+  
+		let furnished = req.query.furnished;
+		if (furnished === undefined || furnished === 'false') {
+			furnished = { $in: [false, true] };
+		}
+  
+		let parking = req.query.parking;
+		if (parking === undefined || parking === 'false') {
+			parking = { $in: [false, true] };
+		}
+  
+		let type = req.query.type;
+		if (type === undefined || type === 'all') {
+			type = { $in: ['sale', 'rent'] };                            // checking if type if rent or sale if type is all or undefined
+		}
+  
+		const searchTerm = req.query.searchTerm || '';
+		const sort = req.query.sort || 'createdAt';
+		const order = req.query.order || 'desc';
+  
+		const listings = await Listing.find({
+			name: { $regex: searchTerm, $options: 'i' },              // search through the whole title  and i means don't care about the lowercase or the uppercase
+			offer,
+			furnished,
+			parking,
+			type,
+		})
+		.sort({ [sort]: order })                  // sort according to the order
+		.limit(limit)
+		.skip(startIndex);							// skip the starting limit or index
+  
+		return res.status(200).json(listings);
+	}catch (error){
+		next(error);
+	}
+};
